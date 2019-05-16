@@ -63,6 +63,56 @@ var tracking = (function () {
       // f(t) = model(t)
   }
 
+  // Objects
+    // State Matrix
+      // Variables being tracked (position, vel, acc) + rotational vars
+    // Process Variable
+      // Predictive error of measurements
+    // Kalman Gain
+      // 
+    // Observed Data
+
+  
+  var stateVector;
+  function initStateVector() {
+    var x = 0,
+        y = 0;
+    if (!stateVector) {
+      // Initialize state position
+      x, y = getMousePosition();
+      stateVector = tf.tensor([x, 0, 0, y, 0, 0]);
+    }
+    return stateVector;
+  }
+
+  function predictNewState(timeDiff) {
+    const _A = tf.tensor([
+      [1,      timeDiff,  (1/2)*timeDiff**2,  0,       0,          0],                  // x
+      [0,      1,         timeDiff,           0,       0,          0],                  // x_vel
+      [0,      0,         1,                  0,       0,          0],                  // x_acc
+      [0,      0,         0,                  1,       timeDiff,   (1/2)*timeDiff**2],  // y
+      [0,      0,         0,                  0,       1,          timeDiff],           // y_vel
+      [0,      0,         0,                  0,       0,          1]                   // y_acc
+    ]);
+    
+
+    // TODO: Is this matmul or mul in tfjs?
+    const predictedStateVector = _A.mul(stateVector);
+    return predictedStateVector;
+  }
+
+  function applyDynamicsModel(x, x_vel, x_acc, y, y_vel, y_acc, timeDiff) {
+    _new_x = x + x_vel*timeDiff + .5*x_acc*timeDiff**2
+    _new_y = y + y_vel*timeDiff + .5*y_acc*timeDiff**2;
+    return x, y;
+  }
+
+  function predictNewPosition(timeDiffFuture) {
+    const _stateVector = predictNewState(timeDiffFuture);
+    const futureX = _stateVector.slice([0],[2]).sum()
+    const futureY = _stateVector.slice([0],[2]).sum()
+  }
+
   return {
     init: init,
     cancel: cancel,
