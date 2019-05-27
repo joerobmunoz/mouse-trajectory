@@ -6,13 +6,25 @@
 
 
         <!-- Entry -->
-        <script src="main.js"></script>
+        <script src="tracking.js"></script>
+        <script src="canvas.js"></script>
 
     </head>
-    <body>
-        
-    </body>
+    <body onload="simulate.init('sim-canvas');">
+        <canvas id="sim-canvas"></canvas>
+    </body>     
     <script>
-        console.log("Mouse tracking, loaded.")
+
+        // Attach document.onmousemove events
+            // 1. Tracking
+        console.log("Mouse tracking, loaded.");
+            // 2. Simulation render
+        document.addEventListener('onmousemove', function(e) {
+            simulate.updateCurrentPos(event.pageX, event.pageY);
+        });
     </script>
+    <style type="text/css">
+        body { margin: 0 }
+        canvas { border: 5px solid purple;}
+    </style>
 </html>
