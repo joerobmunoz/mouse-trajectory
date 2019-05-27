@@ -50,10 +50,6 @@ var simulate = (function () {
         lastMouseY = y;
     }
 
-    function redrawPrediction(x, y) {
-
-    }
-
     return {
         init: init,
         updateCurrentPos: updateCurrentPos,
